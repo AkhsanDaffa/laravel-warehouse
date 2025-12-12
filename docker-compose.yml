@@ -1,0 +1,47 @@
+services:
+  # 1. Aplikasi Laravel (PHP)
+  app:
+    build: .
+    container_name: laravel-app-warehouse
+    volumes:
+      - .:/var/www
+    depends_on:
+      - db
+
+  # 2. Web Server (Nginx)
+  web:
+    image: nginx:alpine
+    container_name: laravel-web-warehouse
+    ports:
+      - "8000:80" # Akses web di localhost:8000
+    volumes:
+      - .:/var/www
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - app
+
+  # 3. Database (PostgreSQL)
+  db:
+    image: postgres:15
+    container_name: laravel-db-warehouse
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  # 4. GUI Admin (pgAdmin)
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: laravel-pgadmin-warehouse
+    environment:
+      PGADMIN_DEFAULT_EMAIL: gudangku@admin.com
+      PGADMIN_DEFAULT_PASSWORD: JayalahSelalu
+    ports:
+      - "5051:80" # Akses GUI di localhost:5051
+    depends_on:
+      - db
+
+volumes:
+  db-data:
