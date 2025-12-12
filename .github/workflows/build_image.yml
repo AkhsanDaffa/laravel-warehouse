@@ -1,0 +1,35 @@
+name: Build Laravel Image
+
+
+on:
+  push:
+    branches: [ "main" ] # Jalan setiap ada push ke branch main
+
+
+jobs:
+  build-dan-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Kode
+        uses: actions/checkout@v3
+
+
+      - name: Login ke Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+
+      - name: Build dan Push Image
+        run: |
+          # Kita pakai nama image: laravel-core
+          IMAGE_NAME=${{ secrets.DOCKERHUB_USERNAME }}/laravel-core
+         
+          # Build Image pakai Dockerfile yang ada di root
+          docker build -t $IMAGE_NAME:latest .
+         
+          # Push ke Docker Hub
+          docker push $IMAGE_NAME:latest
+         
+          echo "✅ Image berhasil dikirim ke Docker Hub: $IMAGE_NAME:latest"
