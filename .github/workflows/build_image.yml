@@ -24,7 +24,7 @@ jobs:
       - name: Build dan Push Image
         run: |
           # Kita pakai nama image: laravel-warehouse
-          IMAGE_NAME=${{ secrets.DOCKERHUB_USERNAME }}/laravel-core
+          IMAGE_NAME=${{ secrets.DOCKERHUB_USERNAME }}/laravel-warehouse
          
           # Build Image pakai Dockerfile yang ada di root
           docker build -t $IMAGE_NAME:latest .
